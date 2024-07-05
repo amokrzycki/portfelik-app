@@ -1,0 +1,1 @@
+# Portfelik - Aplikacja do zarządzania budżetem domowym
