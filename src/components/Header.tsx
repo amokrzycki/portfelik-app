@@ -3,6 +3,7 @@ import { auth } from "../firebase.ts";
 import Logout from "./Logout.tsx";
 import Login from "./Login.tsx";
 import { AppBar, Box, Typography } from "@mui/material";
+import ModeSwitcher from "./ModeSwitcher.tsx";
 
 function Header() {
   const [user] = useAuthState(auth);
@@ -12,8 +13,8 @@ function Header() {
       <AppBar
         position="static"
         sx={{
-          backgroundColor: "green",
-          color: "#fff",
+          bgcolor: "primary.main",
+          color: "text.primary",
           justifyContent: "space-between",
           alignItems: "center",
           padding: "0.5rem",
@@ -21,7 +22,15 @@ function Header() {
         }}
       >
         <Typography variant="h5">Portfelik</Typography>
-        {user ? <Logout /> : <Login />}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <ModeSwitcher />
+          {user ? <Logout /> : <Login />}
+        </Box>
       </AppBar>
     </Box>
   );
