@@ -10,7 +10,7 @@ function ModeSwitcher() {
       onClick={toggleMode}
       startIcon={mode === "light" ? <LightModeIcon /> : <DarkModeIcon />}
       sx={{
-        color: "text.primary",
+        color: "#000",
         bgcolor: "transparent",
         "&:hover": {
           bgcolor: "rgba(0, 0, 0, 0.1)",
