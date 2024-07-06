@@ -9,22 +9,29 @@ import { ExpenseChart } from "./ExpenseChart";
 import { Expense, NewExpense } from "../types/Expense";
 import ExpenseTable from "./ExpenseTable.tsx";
 import { useExpenses } from "../context/ExpensesProvider.tsx";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase.ts";
 
 function Homepage() {
   const { expenses, setExpenses } = useExpenses();
+  const [user] = useAuthState(auth);
 
   useEffect(() => {
     const loadExpenses = async () => {
-      const fetchedExpenses = await fetchExpenses();
-      setExpenses(fetchedExpenses);
+      if (user) {
+        const fetchedExpenses = await fetchExpenses(user.uid);
+        setExpenses(fetchedExpenses);
+      }
     };
     loadExpenses().then((r) => console.log(r));
   }, [setExpenses]);
 
   const addExpense = async (expenseData: NewExpense) => {
-    const expenseId = await addExpenseToDB(expenseData);
-    const newExpense: Expense = { ...expenseData, id: expenseId };
-    setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+    if (user) {
+      const expenseId = await addExpenseToDB(user.uid, expenseData);
+      const newExpense: Expense = { ...expenseData, id: expenseId };
+      setExpenses((prevExpenses) => [newExpense, ...prevExpenses]);
+    }
   };
 
   return (

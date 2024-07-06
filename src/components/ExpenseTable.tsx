@@ -15,6 +15,8 @@ import { Expense } from "../types/Expense";
 import ExpenseTableToolbar from "./ExpenseTableToolbar";
 import { deleteExpenses } from "../services/budgetService";
 import { headCells } from "../constans/headCells.ts";
+import { auth } from "../firebase.ts";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 interface EnhancedTableProps {
   data: Expense[];
@@ -27,6 +29,7 @@ function ExpenseTable({ data, setExpenses }: EnhancedTableProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [user] = useAuthState(auth);
 
   const handleChangePage = (
     _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
@@ -103,15 +106,17 @@ function ExpenseTable({ data, setExpenses }: EnhancedTableProps) {
   };
 
   const handleDelete = async () => {
-    const selectedExpenses = data.filter((expense) =>
-      selected.includes(expense.id.toString()),
-    );
-    await deleteExpenses(selectedExpenses);
-    const updatedExpenses = data.filter(
-      (expense) => !selected.includes(expense.id),
-    );
-    setExpenses(updatedExpenses);
-    setSelected([]);
+    if (user) {
+      const selectedExpenses = data.filter((expense) =>
+        selected.includes(expense.id.toString()),
+      );
+      await deleteExpenses(user.uid, selectedExpenses);
+      const updatedExpenses = data.filter(
+        (expense) => !selected.includes(expense.id),
+      );
+      setExpenses(updatedExpenses);
+      setSelected([]);
+    }
   };
 
   return (
