@@ -36,10 +36,23 @@ function Homepage() {
         alignItems: "center",
         gap: "1rem",
         marginTop: "1rem",
+        padding: "0 1rem",
       }}
     >
-      <ExpenseForm addExpense={addExpense} />
-      <ExpenseChart expenses={expenses} />
+      <Box
+        id="expense-form-chart-wrapper"
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: "1rem",
+          alignItems: "center",
+          width: "100%",
+          justifyContent: "space-around",
+        }}
+      >
+        <ExpenseForm addExpense={addExpense} />
+        <ExpenseChart expenses={expenses} />
+      </Box>
       {expenses.length === 0 ? (
         <Typography variant="h6" align="center">
           Brak wydatków
