@@ -9,6 +9,7 @@ import {
   Paper,
   Checkbox,
   TableSortLabel,
+  TablePagination,
 } from "@mui/material";
 import { Expense } from "../types/Expense";
 import ExpenseTableToolbar from "./ExpenseTableToolbar";
@@ -24,6 +25,22 @@ function ExpenseTable({ data, setExpenses }: EnhancedTableProps) {
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("desc");
   const [orderBy, setOrderBy] = useState<keyof Expense>("date");
   const [selected, setSelected] = useState<string[]>([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (
+    _event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleRequestSort = (property: keyof Expense) => {
     const isAsc = orderBy === property && orderDirection === "asc";
@@ -134,37 +151,52 @@ function ExpenseTable({ data, setExpenses }: EnhancedTableProps) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortData(data, getComparator(orderDirection, orderBy)).map((row) => {
-            const isItemSelected = isSelected(row.id.toString());
-            const formattedDate = row.date.toDate().toLocaleString("pl-PL", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            });
-            return (
-              <TableRow
-                key={row.id}
-                hover
-                onClick={(event) => handleClick(event, row.id.toString())}
-                role="checkbox"
-                aria-checked={isItemSelected}
-                selected={isItemSelected}
-              >
-                <TableCell padding="checkbox">
-                  <Checkbox checked={isItemSelected} />
-                </TableCell>
-                <TableCell>{row.amount} PLN</TableCell>
-                <TableCell>{row.description}</TableCell>
-                <TableCell>{row.category}</TableCell>
-                <TableCell>{formattedDate}</TableCell>
-              </TableRow>
-            );
-          })}
+          {sortData(data, getComparator(orderDirection, orderBy))
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((row) => {
+              const isItemSelected = isSelected(row.id.toString());
+              const formattedDate = row.date.toDate().toLocaleString("pl-PL", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              });
+              return (
+                <TableRow
+                  key={row.id}
+                  hover
+                  onClick={(event) => handleClick(event, row.id.toString())}
+                  role="checkbox"
+                  aria-checked={isItemSelected}
+                  selected={isItemSelected}
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox checked={isItemSelected} />
+                  </TableCell>
+                  <TableCell>{row.amount} PLN</TableCell>
+                  <TableCell>{row.description}</TableCell>
+                  <TableCell>{row.category}</TableCell>
+                  <TableCell>{formattedDate}</TableCell>
+                </TableRow>
+              );
+            })}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        labelRowsPerPage="Wierszy na stronie:"
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}-${to} z ${count !== -1 ? count : `więcej niż ${to}`}`
+        }
+      />
     </TableContainer>
   );
 }
