@@ -6,7 +6,11 @@ import { AppBar, Box, Typography } from "@mui/material";
 import ModeSwitcher from "./ModeSwitcher.tsx";
 import WalletIcon from "@mui/icons-material/Wallet";
 
-export function Header() {
+interface HeaderProps {
+  setAfterLogout: (value: boolean) => void;
+}
+
+export function Header({ setAfterLogout }: HeaderProps) {
   const [user] = useAuthState(auth);
 
   return (
@@ -37,7 +41,7 @@ export function Header() {
         }}
       >
         <ModeSwitcher />
-        {user ? <Logout /> : <Login />}
+        {user ? <Logout setAfterLogut={setAfterLogout} /> : <Login />}
       </Box>
     </AppBar>
   );

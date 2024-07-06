@@ -6,13 +6,15 @@ import NotLoggedIn from "./components/NotLoggedIn.tsx";
 import { ModeProvider } from "./context/ModeProvider.tsx";
 import Homepage from "./components/Homepage.tsx";
 import { ExpensesProvider } from "./context/ExpensesProvider.tsx";
+import { useState } from "react";
 
 const App = () => {
   const [user] = useAuthState(auth);
+  const [afterLogout, setAfterLogout] = useState(false);
 
   return (
     <ModeProvider>
-      <Header />
+      <Header setAfterLogout={setAfterLogout} />
       {user ? (
         <>
           <WelcomeHeader user={user} />
@@ -21,7 +23,7 @@ const App = () => {
           </ExpensesProvider>
         </>
       ) : (
-        <NotLoggedIn />
+        <NotLoggedIn afterLogout={afterLogout} />
       )}
     </ModeProvider>
   );
