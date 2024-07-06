@@ -4,36 +4,41 @@ import Logout from "./Logout.tsx";
 import Login from "./Login.tsx";
 import { AppBar, Box, Typography } from "@mui/material";
 import ModeSwitcher from "./ModeSwitcher.tsx";
+import WalletIcon from "@mui/icons-material/Wallet";
 
-function Header() {
+export function Header() {
   const [user] = useAuthState(auth);
 
   return (
-    <Box>
-      <AppBar
-        position="static"
+    <AppBar
+      position="static"
+      sx={{
+        bgcolor: "primary.main",
+        color: "text.primary",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0.5rem",
+        flexDirection: "row",
+      }}
+    >
+      <Box
         sx={{
-          bgcolor: "primary.main",
-          color: "text.primary",
-          justifyContent: "space-between",
+          display: "flex",
           alignItems: "center",
-          padding: "0.5rem",
-          flexDirection: "row",
         }}
       >
+        <WalletIcon sx={{ fontSize: 30, marginRight: "0.5em" }} />
         <Typography variant="h5">Portfelik</Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <ModeSwitcher />
-          {user ? <Logout /> : <Login />}
-        </Box>
-      </AppBar>
-    </Box>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <ModeSwitcher />
+        {user ? <Logout /> : <Login />}
+      </Box>
+    </AppBar>
   );
 }
-
-export default Header;
