@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { NewExpense } from "../types/Expense.ts";
 import { Timestamp } from "firebase/firestore";
-import { Button, TextField } from "@mui/material";
+import { Box, Button, FormControl, TextField, Typography } from "@mui/material";
+import CategorySelect from "./CategorySelect.tsx";
+import AddIcon from "@mui/icons-material/Add";
 
 interface ExpenseFormProps {
   addExpense: (expense: NewExpense) => void;
@@ -22,34 +24,59 @@ export function ExpenseForm({ addExpense }: ExpenseFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <TextField
-        required
-        type="number"
-        id="amount-input"
-        label="Kwota"
-        defaultValue="0"
-        placeholder="Podaj kwotę"
-        value={amount}
-        onChange={(e) => setAmount(parseFloat(e.target.value))}
-      />
-      <TextField
-        required
-        id="category-input"
-        label="Kategoria"
-        placeholder="Kategoria"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-      />
-      <TextField
-        required
-        id="description-input"
-        label="Opis"
-        placeholder="Opis"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-
-      <Button type="submit">Dodaj wydatek</Button>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          maxWidth: "300px",
+          margin: "0 auto",
+          padding: "20px",
+          border: "1px solid #ccc",
+          borderRadius: "5px",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="h5" gutterBottom>
+          Dodaj nowy wydatek
+        </Typography>
+        <FormControl
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            alignItems: "center",
+            maxWidth: "300px",
+          }}
+        >
+          <TextField
+            required
+            type="number"
+            id="amount-input"
+            label="Kwota"
+            placeholder="Podaj kwotę"
+            value={amount}
+            onChange={(e) => setAmount(parseFloat(e.target.value))}
+          />
+          <CategorySelect
+            selectedCategory={category}
+            onSelectCategory={(e) => setCategory(e.target.value)}
+          />
+          <TextField
+            required
+            id="description-input"
+            label="Opis"
+            placeholder="Opis"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </FormControl>
+        <Button type="submit" startIcon={<AddIcon />} variant="outlined">
+          Dodaj wydatek
+        </Button>
+      </Box>
     </form>
   );
 }

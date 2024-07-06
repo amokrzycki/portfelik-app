@@ -13,21 +13,15 @@ import {
 import { Expense } from "../types/Expense";
 import ExpenseTableToolbar from "./ExpenseTableToolbar";
 import { deleteExpenses } from "../services/budgetService";
+import { headCells } from "../constans/headCells.ts";
 
 interface EnhancedTableProps {
   data: Expense[];
   setExpenses: React.Dispatch<React.SetStateAction<Expense[]>>;
 }
 
-const headCells = [
-  { id: "amount", numeric: true, label: "Kwota" },
-  { id: "description", numeric: false, label: "Opis" },
-  { id: "category", numeric: false, label: "Kategoria" },
-  { id: "date", numeric: false, label: "Data" },
-];
-
 function ExpenseTable({ data, setExpenses }: EnhancedTableProps) {
-  const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
+  const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("desc");
   const [orderBy, setOrderBy] = useState<keyof Expense>("date");
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -142,6 +136,14 @@ function ExpenseTable({ data, setExpenses }: EnhancedTableProps) {
         <TableBody>
           {sortData(data, getComparator(orderDirection, orderBy)).map((row) => {
             const isItemSelected = isSelected(row.id.toString());
+            const formattedDate = row.date.toDate().toLocaleString("pl-PL", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            });
             return (
               <TableRow
                 key={row.id}
@@ -157,7 +159,7 @@ function ExpenseTable({ data, setExpenses }: EnhancedTableProps) {
                 <TableCell>{row.amount} PLN</TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.category}</TableCell>
-                <TableCell>{row.date.toDate().toLocaleDateString()}</TableCell>
+                <TableCell>{formattedDate}</TableCell>
               </TableRow>
             );
           })}
