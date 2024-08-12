@@ -4,7 +4,7 @@
 
 Portfelik App to aplikacja do zarządzania osobistymi finansami, która pozwala użytkownikom na śledzenie ich wydatków. Aplikacja jest prosta w obsłudze, oferując czysty i intuicyjny interfejs użytkownika.
 
-Aplikacja jest zhostowana na GitHub Pages i dostępna pod adresem: [Portfelik App](https://sajson.github.io/portfelik-app/).
+Aplikacja jest zhostowana na GitHub Pages i dostępna pod adresem: [Portfelik App](https://amokrzycki.github.io/portfelik-app/).
 
 ## Technologie
 
